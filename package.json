@@ -1,0 +1,19 @@
+{
+  "name": "Plantr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "DATABASE_URL=postgres://localhost/plantr nodemon ./node_modules/mocha/bin/mocha",
+    "start:dev": "DATABASE_URL=postgres://localhost/plantr nodemon seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "pg": "^7.4.3",
+    "sequelize": "^4.38.0"
+  }
+}
