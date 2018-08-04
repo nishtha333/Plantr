@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const db = new Sequelize(process.env.DATABASE_URL);
+const db = new Sequelize(process.env.DATABASE_URL, {logging: false});
 
 const Gardener = db.define('gardener', {
     name: Sequelize.STRING,
