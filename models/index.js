@@ -17,7 +17,11 @@ const Vegetable = db.define('vegetable', {
     planted_on: Sequelize.DATEONLY
 });
 
-Plot.belongsTo(Gardener);
+/* Prof's Notes (instead of belongsTo) - Sequelize prevents Gardeners to have many Plots
+Table structure in both looks the same - It is how Sequelize allows certain actions
+Gardener.hasOne(Plot);
+*/
+Plot.belongsTo(Gardener); 
 Plot.belongsToMany(Vegetable, {through: "plot_vegetable"});
 Vegetable.belongsToMany(Plot, {through: "plot_vegetable"});
 Gardener.belongsTo(Vegetable, {as: "favorite_vegetable"});
@@ -49,6 +53,25 @@ const seed = () => {
                 Plot.create({size:300, shaded:true, gardenerId:curly.id}),
             ])
         }).then(([plot_moe, plot_larry, plot_curly]) => {
+
+            /* Prof's Notes: When using "hasOne", can do following for Plot:
+                Note: setXXX vs addXXX : If can only have one id associated, then we use "setXXX"
+                      as we cannot addXXX to something that can only have one
+                      Can also use setXXX([]) instead of multiple addXXX
+                Direction in which you go: Depends on how you set relationships in Sequelize, even if DB remains same
+                    Also, addXXX and setXXX methods and direction in which they used depends on how relationships are set above
+                    Example 1: Can do carrot.setGardener(moe);
+                    But, for this; need to set relationship as foll 
+                    (If done in addition to current relationship, need to specify that foreignKey exists, else will create a new column)
+                    Vegetable.hasMany(Farmer, {as: "farmers_favorites", foreignKey:"favorite_VegetableId"});
+                    Example 2:  Plot.belongsToMany(Vegetable, {through: "plot_vegetable"});
+                                Vegetable.belongsToMany(Plot, {through: "plot_vegetable"});
+                            If we only have first relationship and not second; can only go from Plot -> Vegetable
+                            and not from Vegetable -> Plot in the tests; even though DB structure remains the same
+                moe.setPlot(plot_moe);
+                moe.setFavorite_vegetable(tomato);
+                plot_moe.setVegetables([carrot, potato]);
+            */
             return Promise.all([
                 plot_moe.addVegetable(carrot),
                 plot_moe.addVegetable(potato),
